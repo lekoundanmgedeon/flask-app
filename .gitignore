@@ -1,0 +1,47 @@
+# --- Python Basics ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+*.egg-info/
+
+
+# --- Conda & Environments ---
+# Ignore locally created conda environments
+envs/
+.conda/
+conda-bld/
+# Standard virtual environments
+venv/
+.venv/
+env/
+
+# --- VS Code ---
+.vscode/
+# Note: Keep .vscode/settings.json if you want to share workspace settings,
+# but usually it's better to ignore it to avoid personal path conflicts.
+!.vscode/extensions.json
+
+# --- Jupyter Notebooks ---
+.ipynb_checkpoints
+
+# --- IDEs / Editors ---
+.vscode/
+.idea/
+.project
+.pydevproject
+.settings/
+
+# --- OS Specific ---
+.DS_Store
+Thumbs.db
+
+data/
+*.csv
+*.parquet
+
+
+*.manifest
+*.spec

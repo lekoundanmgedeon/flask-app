@@ -1,0 +1,17 @@
+# Intel Image Classifier – Flask App Dependencies
+
+# ── Web framework ─────────────────────────────────────────────
+flask>=3.0.0
+gunicorn>=21.2.0
+Werkzeug>=3.0.0
+
+# ── Image handling ────────────────────────────────────────────
+Pillow>=10.0.0
+numpy>=1.24.0
+
+# ── ML frameworks (CPU wheels — swap for GPU builds on server) ─
+torch>=2.2.0
+torchvision>=0.17.0
+
+tensorflow>=2.15.0
+keras>=3.0.0
