@@ -35,9 +35,10 @@ STD  = np.array([0.229, 0.224, 0.225], dtype=np.float32)
 BASE_DIR    = Path(__file__).parent
 MODELS_DIR  = BASE_DIR / "models"
 PT_MODEL    = MODELS_DIR/ "intel_model.pth"
-TF_MODEL    = MODELS_DIR / "your_firstname_model.keras"
+TF_MODEL    = MODELS_DIR / "intel_model.h5"
 
 ALLOWED_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp"}
+
 
 # ── Lazy model cache ──────────────────────────────────────────────────────────
 _models: dict = {}
@@ -74,19 +75,31 @@ def load_pytorch_model():
     return _models["pytorch"]
 
 
+# In app.py, replace load_tensorflow_model() with this:
+
 def load_tensorflow_model():
-    """Load the TensorFlow/Keras CNN."""
     if "tensorflow" in _models:
         return _models["tensorflow"]
 
     import tensorflow as tf
+    from tensorflow.keras.layers import Dense
+
+    # Keras 2 doesn't know 'quantization_config' — strip it before init
+    class PatchedDense(Dense):
+        def __init__(self, *args, **kwargs):
+            kwargs.pop("quantization_config", None)
+            super().__init__(*args, **kwargs)
 
     gpus = tf.config.list_physical_devices("GPU")
     for g in gpus:
         tf.config.experimental.set_memory_growth(g, True)
     log.info("[TensorFlow] GPUs detected: %d", len(gpus))
 
-    model = tf.keras.models.load_model(str(TF_MODEL))
+    model = tf.keras.models.load_model(
+        str(TF_MODEL),
+        compile=False,
+        custom_objects={"Dense": PatchedDense}
+    )
     _models["tensorflow"] = model
     log.info("[TensorFlow] Model loaded from %s", TF_MODEL)
     return model

@@ -9,9 +9,10 @@ Werkzeug>=3.0.0
 Pillow>=10.0.0
 numpy>=1.24.0
 
-# ── ML frameworks (CPU wheels — swap for GPU builds on server) ─
-torch>=2.2.0
+# ── ML frameworks (CPU wheels for smaller Docker footprint on Render) ─
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.11.0
 torchvision>=0.17.0
 
-tensorflow>=2.15.0
-keras>=3.0.0
+tensorflow-cpu>=2.19.0
+keras>=3.12.1

@@ -1,7 +1,10 @@
 # ── Dockerfile for Intel Image Classifier (Flask)
 # CPU build by default; swap base image for CUDA builds.
 
-FROM python:3.11-slim
+FROM python:3.12
+
+# Configuration pour éviter les invites interactives
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -25,13 +28,15 @@ RUN mkdir -p models outputs
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
 USER appuser
 
-EXPOSE 8080
+# Render uses the PORT environment variable (defaults to 10000)
+ENV PORT 10000
+EXPOSE $PORT
 
 # Gunicorn with 2 workers (increase for more RAM)
-CMD ["gunicorn", \
-     "--bind", "0.0.0.0:8080", \
-     "--workers", "2", \
-     "--threads", "4", \
-     "--timeout", "120", \
-     "--preload", \
-     "app:app"]
+CMD gunicorn \
+     --bind 0.0.0.0:$PORT \
+     --workers 2 \
+     --threads 4 \
+     --timeout 120 \
+     --preload \
+     app:app
